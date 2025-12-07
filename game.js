@@ -36,7 +36,7 @@ let grid = Array.from({ length: rows }, () => Array(cols).fill(null));
 
 // Peter Gold blocks state
 let goldMode = false;
-let goldBlocksDropped = 0; // 10 Gold
+let goldBlocksDropped = 0; // 10 gold
 let specialBlocksDropped = 0; // 2 special F/U
 
 // Tetrominoes
@@ -117,7 +117,6 @@ function drawGoldBlock(x, y, w, h) {
 // Random Tetromino
 function randomTetromino() {
   if (goldMode) {
-    // 10 gold blocks
     if (goldBlocksDropped < 10) {
       goldBlocksDropped++;
       const keys = Object.keys(tetrominoes);
@@ -147,14 +146,13 @@ function randomTetromino() {
         ];
         coins = shape.map(row => row.map(cell=>cell?'U':null));
       }
-      return {shape, coins, x: Math.floor(cols/2)-2, y:0};
+      return {shape, coins, x: Math.floor(cols/2)-2, y: -shape.length}; // spawn above canvas
     } else {
       goldMode = false;
       peterGoldGif.style.display='none';
     }
   }
 
-  // Normal random tetromino
   const spawnPool = ['I','O','T','S','Z','J','L'];
   const key = spawnPool[Math.floor(Math.random()*spawnPool.length)];
   const shape = tetrominoes[key];
@@ -205,24 +203,24 @@ function drawGrid() {
   }
 }
 
-// Collision
+// Collision check
 function collisionAt(tet,xOffset=0,yOffset=0){
   if(!tet) return false;
   const shape = tet.shape;
   for(let r=0;r<shape.length;r++){
     for(let c=0;c<shape[0].length;c++){
       if(shape[r][c]){
-        const nx = tet.x+c+xOffset;
-        const ny = tet.y+r+yOffset;
-        if(nx<0||nx>=cols||ny>=rows) return true;
-        if(grid[ny][nx]) return true;
+        const nx = tet.x + c + xOffset;
+        const ny = tet.y + r + yOffset;
+        if(nx<0 || nx>=cols || ny>=rows) return true;
+        if(ny>=0 && grid[ny][nx]) return true;
       }
     }
   }
   return false;
 }
 
-// Merge Tetromino
+// Merge tetromino
 function mergeTetromino(){
   if(!current) return;
   for(let r=0;r<current.shape.length;r++){
@@ -230,7 +228,7 @@ function mergeTetromino(){
       if(current.shape[r][c] && current.coins[r][c]){
         const gx = current.x+c;
         const gy = current.y+r;
-        grid[gy][gx] = current.coins[r][c];
+        if(gy>=0) grid[gy][gx] = current.coins[r][c];
       }
     }
   }
@@ -244,9 +242,7 @@ function clearLines(){
         if(coin!=='GOLD' && coin!=='F' && coin!=='U'){
           createParticles(c*blockSize,r*blockSize,coin);
           score[coin]+=1;
-        } else {
-          createParticles(c*blockSize,r*blockSize,'GOLD');
-        }
+        } else createParticles(c*blockSize,r*blockSize,'GOLD');
       });
       grid.splice(r,1);
       grid.unshift(Array(cols).fill(null));
@@ -271,7 +267,7 @@ function clearLines(){
   updateScoreboard();
 }
 
-// Rotate
+// Rotate tetromino
 function rotateTetromino(tet){
   const shape = tet.shape;
   const coins = tet.coins;
@@ -291,14 +287,16 @@ function rotateTetromino(tet){
 function rotateTetrominoWithKick(tet){
   const rotated = rotateTetromino(tet);
   const oldX = tet.x;
+  const oldShape = tet.shape;
+  const oldCoins = tet.coins;
   for(let offset of [0,-1,1,-2,2]){
     tet.shape = rotated.shape;
     tet.coins = rotated.coins;
     tet.x = oldX + offset;
     if(!collisionAt(tet,0,0)) return tet;
   }
-  tet.shape = tet.shape;
-  tet.coins = tet.coins;
+  tet.shape = oldShape;
+  tet.coins = oldCoins;
   tet.x = oldX;
   return tet;
 }
@@ -312,7 +310,7 @@ function drop(){
     mergeTetromino();
     clearLines();
     let next = randomTetromino();
-    if(collisionAt(next,0,0) && next.y===0){
+    if(collisionAt(next,0,0)){
       gameActive=false;
       paused=false;
       current=null;
