@@ -1,0 +1,142 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  font-family: 'Courier New', monospace;
+  color: white;
+  flex-direction: column;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* căn trái toàn wrapper */
+}
+
+#header-panel {
+  display: flex;
+  flex-direction: column; /* Game title + scoreboard dọc */
+  align-items: flex-start; /* căn trái */
+  margin-bottom: 10px;
+}
+
+#header-panel h1 {
+  margin: 0 0 40px 0; /* 15px khoảng cách dưới h1 trước scoreboard */
+  font-size: 32px;
+  color: #FFD700;
+}
+
+#scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 18px;
+}
+
+#main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* align top các phần tử */
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+#left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 30px;  /* Thêm margin dưới để có khoảng cách với phần instructions */
+}
+
+#bearGif {
+  width: 400px;
+  height: auto;
+  margin: 0; /* loại bỏ margin-top trước đó */
+}
+
+#instructions {
+  margin-top: 20px; /* Khoảng cách giữa instructions và bearGif */
+  font-size: 14px;  /* Giảm kích thước chữ */
+  text-align: left;  /* Căn trái giống với scoreboard */
+  color: white; /* Đổi màu chữ thành trắng */
+}
+
+#instructions h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px; /* Giảm kích thước chữ của tiêu đề */
+  color: white; /* Đổi màu tiêu đề thành trắng */
+}
+
+#instructions p {
+  margin: 5px 0;
+  font-size: 14px;  /* Giảm kích thước chữ của các dòng hướng dẫn */
+}
+
+#canvas-wrapper {
+  position: relative;
+}
+
+canvas {
+  width: 240px;
+  height: 480px;
+  background: #111;
+  border: 2px solid white;
+  display: block;
+}
+
+#startBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#dogeGif {
+  position: absolute;
+  top: 50%;
+  right: -120px;
+  width: 120px;
+  height: auto;
+  display: none;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+#gameOverOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  display: none;
+}
+
+#gameOverOverlay button {
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Peter Gold gif positioning */
+#peterGoldGif {
+  position: absolute;
+  top: 50px;  /* Điều chỉnh xuống dưới một chút */
+  left: 65%;  /* Di chuyển gif sang phải thêm (điều chỉnh giá trị phần trăm để di chuyển gif sang phải) */
+  transform: translateX(-50%);  /* Căn giữa gif theo chiều ngang */
+  width: 200px;  /* Điều chỉnh kích thước hợp lý */
+  height: auto;
+  display: none;  /* Ẩn Peter Gold gif cho đến khi điều kiện thỏa mãn */
+}
